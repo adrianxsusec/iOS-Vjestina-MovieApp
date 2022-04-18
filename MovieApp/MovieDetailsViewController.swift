@@ -55,9 +55,6 @@ class MovieDetailsViewController: UIViewController {
         let contentView = UIView()
         contentView.backgroundColor = .clear
         
-        let superScrollView = UIView()
-        scrollView.backgroundColor = .clear
-        
         
         //movie image view setup
         movieImageView.contentMode = .scaleAspectFill
@@ -248,8 +245,7 @@ class MovieDetailsViewController: UIViewController {
         
         //adding subviews
         //top subviews
-        view.addSubview(superScrollView)
-        superScrollView.addSubview(scrollView)
+        view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubview(movieImageView)
         contentView.addSubview(overviewView)
@@ -272,11 +268,11 @@ class MovieDetailsViewController: UIViewController {
         //overview constraints
         
         scrollView.snp.makeConstraints{
-            $0.leading.trailing.top.bottom.equalToSuperview()
+            $0.leading.top.bottom.trailing.equalTo(view.safeAreaLayoutGuide)
         }
         
         contentView.snp.makeConstraints{
-            $0.leading.top.bottom.trailing.equalTo(view.safeAreaLayoutGuide)
+            $0.leading.top.bottom.trailing.equalToSuperview()
         }
         
         movieImageView.snp.makeConstraints {
@@ -367,4 +363,3 @@ class MovieDetailsViewController: UIViewController {
     }
     
 }
-
