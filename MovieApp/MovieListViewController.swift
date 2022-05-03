@@ -39,17 +39,17 @@ class MovieListViewController: UIViewController {
         }
         
         searchBarNotSelectedViewController.view.snp.makeConstraints {
-            $0.top.equalTo(searchBarView.snp.bottom).offset(10)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().inset(20)
+            $0.top.equalTo(searchBarView.snp.bottom).offset(5)
+            $0.leading.equalTo(searchBarView).offset(-5)
+            $0.trailing.equalToSuperview()
             $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
         
         searchBarSelectedViewController.view.snp.makeConstraints {
             $0.top.equalTo(searchBarView.snp.bottom).offset(10)
             $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().inset(20)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            $0.trailing.equalToSuperview().inset(30)
+            $0.bottom.equalToSuperview() //(view.safeAreaLayoutGuide.snp.bottom)
         }
         
     }
@@ -62,6 +62,12 @@ extension MovieListViewController: UITextFieldDelegate {
         searchBarView.isSelected()
         searchBarNotSelectedViewController.view.isHidden = true
         searchBarSelectedViewController.view.isHidden = false
+        
+        searchBarView.grayBackground.snp.remakeConstraints {
+            $0.top.leading.bottom.equalToSuperview()
+            $0.trailing.equalToSuperview().inset(85)
+        }
+        
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {

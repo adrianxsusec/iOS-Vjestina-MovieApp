@@ -6,7 +6,7 @@ extension MovieGroup {
     public var groupName: String {
         switch self {
         case .popular:
-            return "What's popular?"
+            return "What's popular"
         case .freeToWatch:
             return "Free to watch"
         case .trending:
@@ -21,16 +21,15 @@ extension MovieGroup {
     public var filterGroup: [String] {
             switch self {
             case .popular:
-                return ["streaming", "onTv", "forRent", "inTheaters"]
+                return ["Streaming", "On TV", "For Rent", "In Theaters"]
             case .freeToWatch:
-                return ["drama", "thriller", "horror", "comedy", "romanticComedy", "sport", "action", "sciFi", "war"]
+                return ["Drama", "Thriller", "Horror", "Comedy", "Romantic Comedy", "Sport", "Action", "Sci Fi", "War"]
             case .trending:
-                return ["day", "week", "month", "allTime"]
+                return ["Day", "Week", "Month", "All Time"]
             case .topRated:
-                return ["day", "week", "month", "allTime"]
+                return ["Day", "Week", "Month", "All Time"]
             case .upcoming:
-                return ["drama", "thriller", "horror", "comedy", "romanticComedy", "sport", "action", "sciFi", "war"]
+                return ["Drama", "Thriller", "Horror", "Comedy", "Romantic Comedy", "Sport", "Action", "Sci Fi", "War"]
             }
         }
-    
 }

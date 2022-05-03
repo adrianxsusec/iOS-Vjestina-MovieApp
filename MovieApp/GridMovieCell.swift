@@ -20,19 +20,18 @@ class GridMovieCell: UITableViewCell {
         moviesLayout.minimumInteritemSpacing = 15
         
         movies = UICollectionView(
-                frame: CGRect(
-                    x: 0,
-                    y: 0,
-                    width: self.bounds.width,
-                    height: self.bounds.height),
+            frame: .zero,
                 collectionViewLayout: moviesLayout)
-        movies.frame = .zero
         
         movies.register(GridMovieSubcell.self, forCellWithReuseIdentifier: cellIdentifier)
         movies.dataSource = self
+        movies.delegate = self
         
         movies.isScrollEnabled = true
-        movies.isPagingEnabled = true
+        //movies.isPagingEnabled = true
+        
+        movies.showsHorizontalScrollIndicator = false
+        movies.showsVerticalScrollIndicator = false
         
         self.contentView.addSubview(filters)
         contentView.addSubview(group)
@@ -49,7 +48,8 @@ class GridMovieCell: UITableViewCell {
         moviesGroup = movieList
         
         group.text = groupName
-        group.font = .boldSystemFont(ofSize: 28)
+        group.font = UIFont(name: "ProximaNova-Bold", size: 22)
+        group.textColor = UIColor(red: 0.043, green: 0.145, blue: 0.247, alpha: 1)
         
         setFilters(filterNames)
         createConstraints()
@@ -67,16 +67,16 @@ class GridMovieCell: UITableViewCell {
         }
 
         filters.snp.makeConstraints {
-            $0.top.equalTo(group.snp.bottom).offset(20)
+            $0.top.equalTo(group.snp.bottom).offset(10)
             $0.leading.equalTo(group)
             $0.height.equalTo(20)
-            $0.trailing.equalToSuperview().inset(5)
+            $0.trailing.equalToSuperview().inset(25)
         }
 
         movies.snp.makeConstraints {
-            $0.top.equalTo(filters.snp.bottom).offset(10)
+            $0.top.equalTo(filters.snp.bottom).offset(8)
             $0.leading.equalTo(filters)
-            $0.trailing.equalToSuperview()
+            $0.trailing.equalToSuperview().inset(20)
             $0.bottom.equalToSuperview().inset(5)
         }
     }
@@ -105,11 +105,11 @@ extension GridMovieCell: UICollectionViewDataSource {
 
 }
 
-extension GridMovieSubcell: UICollectionViewDelegateFlowLayout {
+extension GridMovieCell: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath)
         -> CGSize {
-            CGSize(width: 100, height: 160)
+            CGSize(width: 120, height: 180)
     }
     
 }

@@ -13,24 +13,19 @@ class SearchBarSelectedViewController: UIViewController {
         
         super.viewDidLoad()
         let selectedTableView = UITableView(
-                    frame: CGRect(
-                        x: 0,
-                        y: 0,
-                        width: view.bounds.width,
-                        height: view.bounds.height)
-        )
+            frame: .zero)
         
         selectedTableView.separatorStyle = .none
         selectedTableView.showsLargeContentViewer = false
         selectedTableView.showsHorizontalScrollIndicator = false
         selectedTableView.showsVerticalScrollIndicator = false
-        selectedTableView.rowHeight = 200
+        selectedTableView.rowHeight = 142
         
         view.addSubview(selectedTableView)
         
         selectedTableView.snp.makeConstraints {
             $0.top.leading.bottom.equalToSuperview()
-            $0.trailing.equalToSuperview().inset(10)
+            $0.trailing.equalToSuperview() //.inset(10)
         }
 
         selectedTableView.register(TableMovieCell.self, forCellReuseIdentifier: cellIdentifier)

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A19A66F282140B300AC972E /* ProximaNova-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3A19A66E282140B300AC972E /* ProximaNova-Regular.otf */; };
+		3A19A6712821416D00AC972E /* ProximaNova-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3A19A6702821416D00AC972E /* ProximaNova-Bold.otf */; };
 		3A1F6F972806F9D600E6BAD7 /* TableMovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1F6F962806F9D600E6BAD7 /* TableMovieCell.swift */; };
 		3A1F6F9928076AB100E6BAD7 /* GridMovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1F6F9828076AB100E6BAD7 /* GridMovieCell.swift */; };
 		3A4254FE280C3412008739FD /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4254FD280C3412008739FD /* FilterView.swift */; };
@@ -26,6 +28,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3A19A66E282140B300AC972E /* ProximaNova-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-Regular.otf"; sourceTree = "<group>"; };
+		3A19A6702821416D00AC972E /* ProximaNova-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-Bold.otf"; sourceTree = "<group>"; };
 		3A1F6F962806F9D600E6BAD7 /* TableMovieCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableMovieCell.swift; sourceTree = "<group>"; };
 		3A1F6F9828076AB100E6BAD7 /* GridMovieCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridMovieCell.swift; sourceTree = "<group>"; };
 		3A4254FD280C3412008739FD /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
@@ -79,6 +83,7 @@
 				3A5F7AAC28049C170062B036 /* AppDelegate.swift */,
 				3A5F7AAE28049C170062B036 /* SceneDelegate.swift */,
 				3A5F7AB528049C180062B036 /* Assets.xcassets */,
+				3A19A66E282140B300AC972E /* ProximaNova-Regular.otf */,
 				3A5F7ABA28049C180062B036 /* Info.plist */,
 				3A5F7AC028049C9D0062B036 /* MovieDetailsViewController.swift */,
 				3A5F7ACF2804A1520062B036 /* MovieListViewController.swift */,
@@ -87,6 +92,7 @@
 				3A5F7AD62804A1860062B036 /* SearchBarNotSelectedViewController.swift */,
 				3A1F6F962806F9D600E6BAD7 /* TableMovieCell.swift */,
 				3A1F6F9828076AB100E6BAD7 /* GridMovieCell.swift */,
+				3A19A6702821416D00AC972E /* ProximaNova-Bold.otf */,
 				3A8F42B2280A32C00009F179 /* MovieDataModel.swift */,
 				3A4254FD280C3412008739FD /* FilterView.swift */,
 				3A425503280C499E008739FD /* MovieGroupExtension.swift */,
@@ -161,7 +167,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A19A6712821416D00AC972E /* ProximaNova-Bold.otf in Resources */,
 				3A5F7AB628049C180062B036 /* Assets.xcassets in Resources */,
+				3A19A66F282140B300AC972E /* ProximaNova-Regular.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

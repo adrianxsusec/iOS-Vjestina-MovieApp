@@ -25,6 +25,10 @@ class SearchBarNotSelectedViewController: UIViewController {
             )
             
             unselectedTableView.rowHeight = 300
+            unselectedTableView.separatorStyle = .none
+            unselectedTableView.showsLargeContentViewer = false
+            unselectedTableView.showsHorizontalScrollIndicator = false
+            unselectedTableView.showsVerticalScrollIndicator = false
             view.addSubview(unselectedTableView)
             
             unselectedTableView.register(GridMovieCell.self, forCellReuseIdentifier: cellIdentifier)
@@ -32,7 +36,13 @@ class SearchBarNotSelectedViewController: UIViewController {
             unselectedTableView.dataSource = self
             unselectedTableView.delegate = self
             
+            unselectedTableView.snp.makeConstraints {
+                $0.leading.top.bottom.equalToSuperview()
+                $0.trailing.equalToSuperview()
+            }
+            
             appendGroupNames()
+            getMoviesForGroup()
        }
         
     func appendGroupNames () {
@@ -46,11 +56,13 @@ class SearchBarNotSelectedViewController: UIViewController {
     func getMoviesForGroup () {
         var i = 0
         for group in MovieGroup.allCases {
+            var movieSubgroup: [MovieModel] = []
             for movie in Movies.all() {
                 if movie.group.contains(group) {
-                    movieSubgroups[i].append(movie)
+                    movieSubgroup.append(movie)
                 }
             }
+            movieSubgroups.append(movieSubgroup)
             i += 1
         }
     }
@@ -59,27 +71,26 @@ class SearchBarNotSelectedViewController: UIViewController {
 extension SearchBarNotSelectedViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        MovieGroup.allCases.count
+        1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        1
+        MovieGroup.allCases.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! GridMovieCell
         
-        let currentGroupName = groupNames[indexPath.section]
-        let currentFilterGroup = filterSubgroups[indexPath.section]
+        let currentGroupName = groupNames[indexPath.row]
+        let currentFilterGroup = filterSubgroups[indexPath.row]
         //let currentMovieGroup = movieSubgroups[indexPath.section]
         
-        let currentMovieGroup = Movies.all()
-        
+        let currentMovieGroup = movieSubgroups[indexPath.row]
         
         cell.prepareForReuse()
         cell.fillWithContent(currentGroupName, currentFilterGroup, currentMovieGroup)
         
-        cell.backgroundColor = .systemBlue
+        cell.selectionStyle = .none
         
         return cell
     }
@@ -103,5 +114,10 @@ extension SearchBarNotSelectedViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         cell.contentView.layer.masksToBounds = true
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            tableView.deselectRow(at: indexPath, animated: true)
+    }
+
     
 }

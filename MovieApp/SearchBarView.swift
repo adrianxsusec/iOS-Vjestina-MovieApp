@@ -10,11 +10,12 @@ class SearchBarView: UIView {
     let searchInputTextField = UITextField()
     let closeCrossButton = UIButton()
     let cancelButton = UIButton()
+    let grayBackground = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = .systemGray
-        self.layer.cornerRadius = 10
+//        self.backgroundColor = .systemGray
+//        self.layer.cornerRadius = 10
         self.clipsToBounds = true
         buildInitialViews()
     }
@@ -25,12 +26,20 @@ class SearchBarView: UIView {
 
     func buildInitialViews() {
         
-        magnifierIcon.tintColor = .black
+        grayBackground.backgroundColor = .systemGray
+        grayBackground.layer.cornerRadius = 10
+        self.addSubview(grayBackground)
+        
+        magnifierIcon.tintColor = UIColor(red: 0.043, green: 0.145, blue: 0.247, alpha: 1)
         self.addSubview(magnifierIcon)
         
         closeCrossButton.setBackgroundImage(UIImage(systemName: "xmark"), for: .normal)
+        closeCrossButton.tintColor = UIColor(red: 0.043, green: 0.145, blue: 0.247, alpha: 1)
         
-        searchInputTextField.attributedPlaceholder = NSAttributedString("Search")
+        let customSearch = NSAttributedString(string: "Search",
+                                              attributes: [NSAttributedString.Key.font : UIFont(name: "ProximaNova-Regular", size: 18) as Any])
+        
+        searchInputTextField.attributedPlaceholder = customSearch
         searchInputTextField.rightView = closeCrossButton
         searchInputTextField.rightViewMode = .whileEditing
         closeCrossButton.addTarget(self, action: #selector(crossClearButtonTapped(_:)), for: .touchUpInside)
@@ -41,8 +50,11 @@ class SearchBarView: UIView {
         //self.addSubview(closeCrossButton)
         
         cancelButton.setTitle("Cancel", for: .normal)
+        cancelButton.titleLabel?.font = UIFont(name: "ProximaNova-Regular", size: 18)
+        cancelButton.setTitleColor(UIColor(red: 0.043, green: 0.145, blue: 0.247, alpha: 1), for: .normal)
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
         self.addSubview(cancelButton)
+        
         
         notSelected()
         
@@ -51,7 +63,7 @@ class SearchBarView: UIView {
     func constraintsWhenNotSelected() {
     
         magnifierIcon.snp.makeConstraints {
-            $0.leading.equalToSuperview().offset(20)
+            $0.leading.equalToSuperview().offset(15)
             $0.top.equalToSuperview().offset(13)
             $0.height.equalTo(25)
             $0.width.equalTo(25)
@@ -69,6 +81,10 @@ class SearchBarView: UIView {
             $0.trailing.equalToSuperview().inset(10)
         }
         
+        grayBackground.snp.makeConstraints {
+            $0.leading.top.bottom.trailing.equalToSuperview()
+        }
+        
     }
     
     func constraintsWhenSelected() {
@@ -84,6 +100,7 @@ class SearchBarView: UIView {
             $0.leading.equalTo(magnifierIcon.snp.trailing).offset(10)
             $0.top.equalTo(magnifierIcon).offset(2)
             $0.height.equalTo(20)
+            $0.trailing.equalToSuperview().inset(95)
         }
         
 //        closeCrossButton.snp.makeConstraints{
@@ -97,22 +114,24 @@ class SearchBarView: UIView {
             $0.top.equalTo(searchInputTextField).offset(-7)
             $0.trailing.equalToSuperview().inset(10)
         }
+        
+        grayBackground.snp.makeConstraints {
+            $0.top.leading.bottom.equalToSuperview()
+            $0.trailing.equalToSuperview().inset(85)
+        }
+        
     }
     
     func isSelected() {
-        
         cancelButton.isHidden = false
 //        closeCrossButton.isHidden = false
         constraintsWhenSelected()
-    
     }
     
     func notSelected() {
-        
         cancelButton.isHidden = true
         constraintsWhenNotSelected()
         searchInputTextField.text = "" // treba li ovo?
-        
     }
     
     @objc
@@ -125,5 +144,10 @@ class SearchBarView: UIView {
         searchInputTextField.delegate?.textFieldDidEndEditing!(searchInputTextField)
         notSelected()
         searchInputTextField.endEditing(true)
+        
+        grayBackground.snp.remakeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
     }
 }
