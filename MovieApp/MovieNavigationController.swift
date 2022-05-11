@@ -1,8 +1,11 @@
-//
-//  MovieNavigationController.swift
-//  MovieApp
-//
-//  Created by Adrian Sušec on 04.05.2022..
-//
-
 import Foundation
+import SnapKit
+import UIKit
+
+class MovieNavigationController: UINavigationController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
+}

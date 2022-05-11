@@ -4,7 +4,9 @@ import UIKit
 
 class MovieDetailsViewController: UIViewController {
     
-    var backgroundColor: UIColor
+    var backgroundColor: UIColor!
+    var movieForDisplay: Movie!
+    var movieFetched: MovieAccurate!
     
     init(backgroundColor: UIColor) {
         self.backgroundColor = backgroundColor
@@ -21,11 +23,56 @@ class MovieDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let id_string = String(movieForDisplay.id)
+        
+        let url_string = "https://api.themoviedb.org/3/movie/" + id_string + "?language=en-US&page=1&api_key=" + api_key
+        
+        fetchMovieDetails(url_string)
+        
         view.backgroundColor = .white
         buildViews()
+        
+        let titleItem = UIImageView(image: UIImage(named: "tmdbtitleview.pdf"))
+        navigationItem.titleView = titleItem
+    }
+    
+    func setMovieForDisplay(_ moviePassed: Movie) {
+        movieForDisplay = moviePassed
+    }
+    
+    func fetchMovieDetails(_ url_string: String) {
+        
+        let networkService = NetworkService()
+        
+        guard let url = URL(string: url_string) else { return }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        print(request)
+        
+        networkService.executeUrlRequest(request) { (result: Result<MovieAccurate, RequestError>) in
+            
+            switch result {
+            case .success(_):
+                do {
+                    self.movieFetched = try result.get()
+                    print("Movies for search fetched")
+                } catch {
+                    print ("Error while fetching movies for search")
+                }
+            case .failure(_):
+                print("error")
+                return
+            }
+        }
     }
     
     func buildViews() {
+        
+        
         //upper part
         let movieImage = UIImage(named: "ironmanposter.png")
         let movieImageView = UIImageView(image: movieImage)
@@ -49,8 +96,8 @@ class MovieDetailsViewController: UIViewController {
         let screenplay2 = UILabel()
         let screenplay3 = UILabel()
         
-        let scrollView = UIScrollView()
-        scrollView.backgroundColor = .clear
+//        let scrollView = UIScrollView()
+//        scrollView.backgroundColor = .clear
         
         let contentView = UIView()
         contentView.backgroundColor = .clear
@@ -60,8 +107,8 @@ class MovieDetailsViewController: UIViewController {
         movieImageView.contentMode = .scaleAspectFill
         movieImageView.clipsToBounds = true
         
-        let gradientView = UIView(frame: movieImageView.frame)
-        let gradient = CAGradientLayer()
+        var gradientView = UIView(frame: movieImageView.frame)
+        var gradient = CAGradientLayer()
         gradient.frame = gradientView.frame
         gradient.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
         gradient.locations = [0.0, 0.4]
@@ -71,15 +118,17 @@ class MovieDetailsViewController: UIViewController {
         
         
         //percentage setup
-        let percentageNumber = "76"
+        
+        //let percentageNumber = "76"
+        let percentageNumber = String(describing: movieForDisplay.vote_average)
         let attrsPN = [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: movieImageView.frame.height * 0.016)]
         let attributedPN = NSMutableAttributedString(string: percentageNumber, attributes: attrsPN)
         
-        let percentageSign = "%"
-        let attrsPS = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: movieImageView.frame.height * 0.008)]
-        let attributedPS = NSMutableAttributedString(string: percentageSign, attributes: attrsPS)
+//        let percentageSign = "%"
+//        let attrsPS = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: movieImageView.frame.height * 0.008)]
+//        let attributedPS = NSMutableAttributedString(string: percentageSign, attributes: attrsPS)
         
-        attributedPN.append(attributedPS)
+        //attributedPN.append(attributedPS)
         
         percentage.attributedText = attributedPN
         percentage.textColor = .white
@@ -92,38 +141,52 @@ class MovieDetailsViewController: UIViewController {
         userScore.backgroundColor = .clear
         
         //movie name setup
-        let movieNameTitle = "Iron man"
+        //let movieNameTitle = "Iron man"
+        let movieNameTitle = movieForDisplay.title
         let attrsMNT = [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: movieImageView.frame.height * 0.018)]
         let attributedMNT = NSMutableAttributedString(string: movieNameTitle, attributes: attrsMNT)
         
-        let movieNameYear = " (2008)"
-        let attrsMNY = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: movieImageView.frame.height * 0.018)]
-        let attributedMNY = NSMutableAttributedString(string: movieNameYear, attributes: attrsMNY)
+        //let movieNameYear = " (2008)"
+//        let attrsMNY = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: movieImageView.frame.height * 0.018)]
+//        let attributedMNY = NSMutableAttributedString(string: movieNameYear, attributes: attrsMNY)
         
-        attributedMNT.append(attributedMNY)
+        //attributedMNT.append(attributedMNY)
         
         movieName.attributedText = attributedMNT
         movieName.textColor = .white
         movieName.backgroundColor = .clear
+        movieName.numberOfLines = 0
         
         //movie release date
-        movieReleaseDate.text = "05/02/2008"
+        //movieReleaseDate.text = "05/02/2008"
+        movieReleaseDate.text = movieForDisplay.release_date
         movieReleaseDate.textColor = .white
         movieReleaseDate.font = UIFont.systemFont(ofSize: movieImageView.frame.height * 0.01)
         movieReleaseDate.backgroundColor = .clear
         
+        
+        
         //movie details setup
-        let movieDetailsText = "Action, Science Fiction, Adventure"
-        let attrsMDT = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: movieImageView.frame.height * 0.01)]
-        let attributedMDT = NSMutableAttributedString(string: movieDetailsText, attributes: attrsMDT)
+        //let movieDetailsText = "Action, Science Fiction, Adventure"
+        var movieDetailsText = ""
+        if movieFetched != nil {
+            movieFetched.genres?.genres.forEach {
+                movieDetailsText.append(contentsOf: $0.name + " ")
+            }
+            
+            let attrsMDT = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: movieImageView.frame.height * 0.01)]
+            let attributedMDT = NSMutableAttributedString(string: movieDetailsText, attributes: attrsMDT)
+            
+            let movieDetailsDuration = movieFetched.runtime
+            let attrsMDD = [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: movieImageView.frame.height * 0.01)]
+            let attributedMDD = NSMutableAttributedString(string: String(movieDetailsDuration!), attributes: attrsMDD)
+            
+            attributedMDT.append(attributedMDD)
+            movieDetails.attributedText = attributedMDT
+        } else {
+            movieDetailsText = "Action genre"
+        }
         
-        let movieDetailsDuration = "  2h 6m"
-        let attrsMDD = [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: movieImageView.frame.height * 0.01)]
-        let attributedMDD = NSMutableAttributedString(string: movieDetailsDuration, attributes: attrsMDD)
-        
-        attributedMDT.append(attributedMDD)
-        
-        movieDetails.attributedText = attributedMDT
         movieDetails.textColor = .white
         movieDetails.backgroundColor = .clear
         
@@ -142,17 +205,24 @@ class MovieDetailsViewController: UIViewController {
         overviewTitle.font = UIFont.boldSystemFont(ofSize: movieImageView.frame.height * 0.016)
         
         //movie description
-        movieDescription.text = "After being held captive in an Afghan cave, billionaire engineer Tony Stark creates a unique weaponized suit of armor to fight evil."
+//        movieDescription.text = "After being held captive in an Afghan cave, billionaire engineer Tony Stark creates a unique weaponized suit of armor to fight evil."
+        
+        movieDescription.text = movieForDisplay.overview
         movieDescription.textColor = .black
         movieDescription.font = UIFont.systemFont(ofSize: movieImageView.frame.height * 0.011)
         movieDescription.numberOfLines = 0
+        movieDescription.snp.makeConstraints {
+            $0.height.equalTo(50)
+        }
         
         //character 1
-        let char1name = "Don Heck\n\n"
+        //let char1name = "Don Heck\n\n"
+        let char1name = movieForDisplay.release_date + "\n"
         let attrsC1N = [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: movieImageView.frame.height * 0.01)]
         let attributedC1N = NSMutableAttributedString(string: char1name, attributes: attrsC1N)
         
-        let char1role = "Characters"
+//        let char1role = "Characters"
+        let char1role = "Release date"
         let attrsC1R = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: movieImageView.frame.height * 0.01)]
         let attributedC1R = NSMutableAttributedString(string: char1role, attributes: attrsC1R)
         
@@ -164,11 +234,18 @@ class MovieDetailsViewController: UIViewController {
         character1.numberOfLines = 0
         
         //character 2
-        let char2name = "Jack Kirby\n\n"
+//        let char2name = "Jack Kirby\n\n"
+        let char2name = { () -> String in
+            switch self.movieForDisplay.adult {
+            case true: return "Adult" + "\n"
+            case false: return "Non-adult" + "\n"
+            }
+        }
         let attrsC2N = [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: movieImageView.frame.height * 0.01)]
-        let attributedC2N = NSMutableAttributedString(string: char2name, attributes: attrsC2N)
+        let attributedC2N = NSMutableAttributedString(string: char2name(), attributes: attrsC2N)
         
-        let char2role = "Characters"
+//        let char2role = "Characters"
+        let char2role = "Type"
         let attrsC2R = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: movieImageView.frame.height * 0.01)]
         let attributedC2R = NSMutableAttributedString(string: char2role, attributes: attrsC2R)
         
@@ -180,11 +257,13 @@ class MovieDetailsViewController: UIViewController {
         character2.numberOfLines = 0
         
         //director
-        let directorName = "Jon Favreau\n\n"
+//        let directorName = "Jon Favreau\n\n"
+        let directorName = movieForDisplay.original_language + "\n"
         let attrsDN = [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: movieImageView.frame.height * 0.01)]
         let attributedDN = NSMutableAttributedString(string: directorName, attributes: attrsDN)
         
-        let directorRole = "Director"
+//      let directorRole = "Director"
+        let directorRole = "Original language"
         let attrsDR = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: movieImageView.frame.height * 0.01)]
         let attributedDR = NSMutableAttributedString(string: directorRole, attributes: attrsDR)
         
@@ -196,11 +275,13 @@ class MovieDetailsViewController: UIViewController {
         director.numberOfLines = 0
         
         //screenplay 1
-        let screenplay1name = "Don Heck\n\n"
+//        let screenplay1name = "Don Heck\n\n"
+        let screenplay1name = String(movieForDisplay.vote_count) + "\n"
         let attrsS1N = [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: movieImageView.frame.height * 0.01)]
         let attributedS1N = NSMutableAttributedString(string: screenplay1name, attributes: attrsS1N)
         
-        let screenplay1role = "Screenplay"
+//        let screenplay1role = "Screenplay"
+        let screenplay1role = "Vote count"
         let attrsS1R = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: movieImageView.frame.height * 0.01)]
         let attributedS1R = NSMutableAttributedString(string: screenplay1role, attributes: attrsS1R)
         
@@ -212,11 +293,13 @@ class MovieDetailsViewController: UIViewController {
         screenplay1.numberOfLines = 0
         
         //screenplay 2
-        let screenplay2name = "Jack Marcum\n\n"
+//        let screenplay2name = "Jack Marcum\n\n"
+        let screenplay2name = String(movieForDisplay.popularity) + "\n"
         let attrsS2N = [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: movieImageView.frame.height * 0.01)]
         let attributedS2N = NSMutableAttributedString(string: screenplay2name, attributes: attrsS2N)
         
-        let screenplay2role = "Screenplay"
+//        let screenplay2role = "Screenplay"
+        let screenplay2role = "Popularity"
         let attrsS2R = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: movieImageView.frame.height * 0.01)]
         let attributedS2R = NSMutableAttributedString(string: screenplay2role, attributes: attrsS2R)
         
@@ -228,11 +311,13 @@ class MovieDetailsViewController: UIViewController {
         screenplay2.numberOfLines = 0
         
         //screenplay 3
-        let screenplay3name = "Jack Marcum\n\n"
+//        let screenplay3name = "Jack Marcum\n\n"
+        let screenplay3name = String(movieForDisplay.id) + "\n"
         let attrsS3N = [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: movieImageView.frame.height * 0.01)]
         let attributedS3N = NSMutableAttributedString(string: screenplay3name, attributes: attrsS3N)
         
-        let screenplay3role = "Screenplay"
+//        let screenplay3role = "Screenplay"
+        let screenplay3role = "ID"
         let attrsS3R = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: movieImageView.frame.height * 0.01)]
         let attributedS3R = NSMutableAttributedString(string: screenplay3role, attributes: attrsS3R)
         
@@ -245,8 +330,9 @@ class MovieDetailsViewController: UIViewController {
         
         //adding subviews
         //top subviews
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
+//        view.addSubview(scrollView)
+//        scrollView.addSubview(contentView)
+        view.addSubview(contentView)
         contentView.addSubview(movieImageView)
         contentView.addSubview(overviewView)
         contentView.addSubview(percentage)
@@ -265,14 +351,37 @@ class MovieDetailsViewController: UIViewController {
         contentView.addSubview(screenplay2)
         contentView.addSubview(screenplay3)
         
-        //overview constraints
-        
-        scrollView.snp.makeConstraints{
-            $0.leading.top.bottom.trailing.equalTo(view.safeAreaLayoutGuide)
+        //samo overwriteanje punjenja
+        let url = URL(string: "https://image.tmdb.org/t/p/original" + movieForDisplay.poster_path)!
+
+        if let data = try? Data(contentsOf: url) {
+            movieImageView.image = UIImage(data: data)
         }
         
+        
+        
+        gradientView = UIView(frame: movieImageView.frame)
+        gradient = CAGradientLayer()
+        gradient.frame = gradientView.frame
+        gradient.colors = [UIColor.clear.cgColor, UIColor.black.cgColor]
+        gradient.locations = [0.0, 0.4]
+        gradientView.layer.insertSublayer(gradient, at: 0)
+        movieImageView.addSubview(gradientView)
+        movieImageView.bringSubviewToFront(gradientView)
+        
+        
+        //overview constraints
+        
+//        scrollView.snp.makeConstraints{
+//            $0.leading.top.bottom.trailing.equalTo(view.safeAreaLayoutGuide)
+//            $0.width.equalToSuperview()
+//        }
+        
         contentView.snp.makeConstraints{
-            $0.leading.top.bottom.trailing.equalToSuperview()
+            $0.leading.equalTo(view.safeAreaLayoutGuide.snp.leading)
+            $0.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing)
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
         }
         
         movieImageView.snp.makeConstraints {
@@ -299,6 +408,7 @@ class MovieDetailsViewController: UIViewController {
         movieName.snp.makeConstraints {
             $0.leading.equalTo(percentage.snp.leading)
             $0.top.equalTo(percentage.snp.bottom).offset(movieImageView.frame.height * 0.012)
+            $0.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing).offset(-20)
         }
         
         movieReleaseDate.snp.makeConstraints {
@@ -313,7 +423,7 @@ class MovieDetailsViewController: UIViewController {
         
         favourite.snp.makeConstraints {
             $0.leading.equalTo(percentage.snp.leading)
-            $0.bottom.equalTo(movieImageView.snp.bottom).inset(movieImageView.frame.height * 0.03)
+            $0.bottom.equalTo(movieImageView.snp.bottom).inset(movieImageView.frame.height * 0.01)
             $0.height.width.equalTo(movieImageView).multipliedBy(0.1)
         }
         

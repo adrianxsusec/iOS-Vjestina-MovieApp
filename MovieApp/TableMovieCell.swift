@@ -8,6 +8,7 @@ class TableMovieCell: UITableViewCell {
     var pic = UIImageView()
     var title = UILabel()
     var desc = UILabel()
+    var movie: Movie!
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -17,7 +18,7 @@ class TableMovieCell: UITableViewCell {
         contentView.addSubview(desc)
         
         // add shadow on cell
-            backgroundColor = .clear // very important
+            backgroundColor = .clear
             layer.masksToBounds = false
             layer.shadowOpacity = 0.23
             layer.shadowRadius = 4
@@ -28,8 +29,6 @@ class TableMovieCell: UITableViewCell {
             contentView.backgroundColor = .white
             contentView.layer.cornerRadius = 10
         self.contentView.layer.masksToBounds = true
-        
-        
 
         createConstraints()
         // styleCell()
@@ -39,22 +38,49 @@ class TableMovieCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func fillWithContent(movie: MovieModel) {
+//    func fillWithContent(movie: MovieModel) {
+//
+//        let url = URL(string: movie.imageUrl)!
+//
+//        if let data = try? Data(contentsOf: url) {
+//            self.pic.image = UIImage(data: data)
+//        }
+//
+//        let attributedTitleConfig = [NSAttributedString.Key.font : UIFont(name: "ProximaNova-Bold", size: 18)]
+//        var title = movie.title
+//        title.append(" (\(movie.year))")
+//        let attributedTitle = NSMutableAttributedString(string: title, attributes: attributedTitleConfig as [NSAttributedString.Key : Any])
+//        
+//        self.title.attributedText = attributedTitle
+//        self.title.textColor = UIColor(red: 0.043, green: 0.145, blue: 0.247, alpha: 1)
+//        self.desc.text = movie.description
+//        self.desc.font = UIFont(name: "ProximaNova-Regular", size: 15)
+//        self.desc.textColor = UIColor(red: 0.51, green: 0.51, blue: 0.51, alpha: 1)
+//        self.desc.numberOfLines = 0
+//
+//    }
+    
+    func fillWithContent2(moviePassed: Movie) {
         
-        let url = URL(string: movie.imageUrl)!
+        self.movie = moviePassed
         
-        if let data = try? Data(contentsOf: url) {
-            self.pic.image = UIImage(data: data)
+        let url = URL(string: "https://image.tmdb.org/t/p/original" + moviePassed.poster_path)!
+        
+        DispatchQueue.main.async {
+            if let data = try? Data(contentsOf: url) {
+                self.pic.image = UIImage(data: data)
+            }
         }
         
+        
         let attributedTitleConfig = [NSAttributedString.Key.font : UIFont(name: "ProximaNova-Bold", size: 18)]
-        var title = movie.title
-        title.append(" (\(movie.year))")
+        var title = moviePassed.title
+        title.append(" (\(moviePassed.release_date))")
         let attributedTitle = NSMutableAttributedString(string: title, attributes: attributedTitleConfig as [NSAttributedString.Key : Any])
         
         self.title.attributedText = attributedTitle
         self.title.textColor = UIColor(red: 0.043, green: 0.145, blue: 0.247, alpha: 1)
-        self.desc.text = movie.description
+        self.desc.text = moviePassed.overview
         self.desc.font = UIFont(name: "ProximaNova-Regular", size: 15)
         self.desc.textColor = UIColor(red: 0.51, green: 0.51, blue: 0.51, alpha: 1)
         self.desc.numberOfLines = 0

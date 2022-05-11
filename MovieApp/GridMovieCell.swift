@@ -9,7 +9,10 @@ class GridMovieCell: UITableViewCell {
     var filters = FilterView()
     var moviesLayout = UICollectionViewFlowLayout()
     var movies: UICollectionView!
-    var moviesGroup: [MovieModel] = []
+    //var moviesGroup: [MovieModel] = []
+    var moviesInCategory: [Movie] = []
+    
+    var navController: UIViewController!
     
     let cellIdentifier = "cellId"
 
@@ -43,9 +46,26 @@ class GridMovieCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func fillWithContent(_ groupName: String, _ filterNames: [String], _ movieList: [MovieModel]) {
+//    func fillWithContent(_ groupName: String, _ filterNames: [String], _ movieList: [MovieModel]) {
+//
+//        moviesGroup = movieList
+//
+//        group.text = groupName
+//        group.font = UIFont(name: "ProximaNova-Bold", size: 22)
+//        group.textColor = UIColor(red: 0.043, green: 0.145, blue: 0.247, alpha: 1)
+//
+//        setFilters(filterNames)
+//        createConstraints()
+//
+//    }
+    
+    func setNavController(_ vc: UIViewController) {
+        self.navController = vc
+    }
+    
+    func fillWithContent(_ groupName: String, _ filterNames: [String], _ movieList: [Movie]) {
         
-        moviesGroup = movieList
+        moviesInCategory = movieList
         
         group.text = groupName
         group.font = UIFont(name: "ProximaNova-Bold", size: 22)
@@ -90,7 +110,7 @@ extension GridMovieCell: UICollectionViewDataSource {
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return moviesGroup.count
+        return moviesInCategory.count
     }
 
     
@@ -98,7 +118,11 @@ extension GridMovieCell: UICollectionViewDataSource {
         
         let cell = movies.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! GridMovieSubcell
         
-        cell.fillWithContent(moviesGroup[indexPath.row])
+        //cell.fillWithContent(moviesGroup[indexPath.row])
+        
+        cell.fillWithContent(moviesInCategory[indexPath.row])
+        
+        cell.setNavController(navController)
         
         return cell
     }
@@ -114,6 +138,15 @@ extension GridMovieCell: UICollectionViewDelegateFlowLayout {
     
 }
     
+extension GridMovieCell: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let movieDetailsVC = MovieDetailsViewController()
+        movieDetailsVC.setMovieForDisplay(moviesInCategory[indexPath.row])
+        navController.navigationController?.pushViewController(movieDetailsVC, animated: true)
+    }
+    
+}
 
 
 

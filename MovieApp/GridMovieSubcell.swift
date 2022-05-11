@@ -6,9 +6,11 @@ import MovieAppData
 class GridMovieSubcell: UICollectionViewCell {
     
     var picture = UIImageView()
-    var movie: MovieModel!
+    var movie: Movie!
     var heart: UIButton!
     var heartBackground = UIImageView(image: UIImage(systemName: "circle.fill"))
+    
+    var navController: UIViewController!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -31,12 +33,32 @@ class GridMovieSubcell: UICollectionViewCell {
         createConstraints()
     }
     
-    func fillWithContent(_ moviePassed: MovieModel) {
-        let url = URL(string: moviePassed.imageUrl)!
+//    func fillWithContent(_ moviePassed: MovieModel) {
+//        let url = URL(string: moviePassed.imageUrl)!
+//
+//        if let data = try? Data(contentsOf: url) {
+//            self.picture.image = UIImage(data: data)
+//        }
+//    }
+    
+    func setNavController (_ vc: UIViewController) {
+        self.navController = vc
+    }
+    
+    func fillWithContent(_ moviePassed: Movie) {
         
-        if let data = try? Data(contentsOf: url) {
-            self.picture.image = UIImage(data: data)
+        movie = moviePassed
+        
+        let url = URL(string: "https://image.tmdb.org/t/p/original" + moviePassed.poster_path)!
+
+        DispatchQueue.main.async {
+            if let data = try? Data(contentsOf: url) {
+                self.picture.image = UIImage(data: data)
+            }
+
         }
+        
+        
     }
     
     required init?(coder: NSCoder) {
@@ -57,5 +79,4 @@ class GridMovieSubcell: UICollectionViewCell {
             $0.centerX.centerY.equalToSuperview()
         }
     }
-    
 }
