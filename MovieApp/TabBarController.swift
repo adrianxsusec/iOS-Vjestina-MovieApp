@@ -35,6 +35,13 @@ class TabBarController: UITabBarController {
         }
         
         if (isConnectedToInternet) {
+            
+            let moviesRepository = MoviesRepository()
+            
+            moviesRepository.saveDownloadedMovies()
+            
+            
+            
             movieListViewController = MovieListViewController()
             movieNavigationController = MovieNavigationController(rootViewController: movieListViewController)
             favoritesViewController = FavoritesViewController()

@@ -166,7 +166,13 @@ extension SearchBarNotSelectedViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! GridMovieCell
+        
+        while(moviesByCategory.isEmpty) {
+            
+        }
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? GridMovieCell
+        else { return UITableViewCell()}
         
         
         let filters = self.genres.map {
@@ -179,7 +185,6 @@ extension SearchBarNotSelectedViewController: UITableViewDataSource {
         //let currentFilterGroup = filterSubgroups[indexPath.row]
         //let currentMovieGroup =
     
-        
         let movies = moviesByCategory[indexPath.row]
     
         cell.prepareForReuse()

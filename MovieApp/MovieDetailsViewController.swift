@@ -35,6 +35,10 @@ class MovieDetailsViewController: UIViewController {
         
         let titleItem = UIImageView(image: UIImage(named: "tmdbtitleview.pdf"))
         navigationItem.titleView = titleItem
+        
+        let movieDatabaseDataSource = MovieDatabaseDataSource()
+        
+        print(movieDatabaseDataSource.fetchMovies())
     }
     
     func setMovieForDisplay(_ moviePassed: Movie) {
@@ -59,9 +63,9 @@ class MovieDetailsViewController: UIViewController {
             case .success(_):
                 do {
                     self.movieFetched = try result.get()
-                    print("Movies for search fetched")
+                    print("Movies details")
                 } catch {
-                    print ("Error while fetching movies for search")
+                    print ("Error while fetching movie details")
                 }
             case .failure(_):
                 print("error")
@@ -71,7 +75,6 @@ class MovieDetailsViewController: UIViewController {
     }
     
     func buildViews() {
-        
         
         //upper part
         let movieImage = UIImage(named: "ironmanposter.png")
@@ -170,7 +173,7 @@ class MovieDetailsViewController: UIViewController {
         //let movieDetailsText = "Action, Science Fiction, Adventure"
         var movieDetailsText = ""
         if movieFetched != nil {
-            movieFetched.genres?.genres.forEach {
+            movieFetched.genres?.forEach {
                 movieDetailsText.append(contentsOf: $0.name + " ")
             }
             

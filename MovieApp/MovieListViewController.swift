@@ -33,14 +33,24 @@ class MovieListViewController: UIViewController {
         titleItem = UIImageView(image: UIImage(named: "tmdbtitleview.pdf"))
         navigationItem.titleView = titleItem
         
+        searchBarView.searchInputTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        
         buildInitialViews()
         
-        
-    
+
 //        let movieDetailsVC = MovieDetailsViewController()
 //        self.navigationController?.pushViewController(movieDetailsVC, animated: false)
         
         
+    }
+    
+    @objc
+    func textFieldDidChange(){
+        let moviesRepository = MoviesRepository()
+        guard let text = searchBarView.searchInputTextField.text else { return }
+        guard let movies = moviesRepository.getMoviesByName(name: text) else { return }
+        searchBarSelectedViewController.movieViewModelsForSearch = movies
+        searchBarSelectedViewController.selectedTableView.reloadData()
     }
     
     func buildInitialViews() {
@@ -51,8 +61,6 @@ class MovieListViewController: UIViewController {
         searchBarSelectedViewController.view.isHidden = true
         
         buildInitialConstraints()
-        
-        
     }
     
     func buildInitialConstraints () {
@@ -101,4 +109,5 @@ extension MovieListViewController: UITextFieldDelegate {
         searchBarNotSelectedViewController.view.isHidden = false
         searchBarSelectedViewController.view.isHidden = true
     }
+    
 }

@@ -140,6 +140,8 @@ class FilterView: UIView {
              )
         
         sender.setAttributedTitle(attributedString, for: .normal)
+        
+        sender.layoutIfNeeded()
     }
     
 }

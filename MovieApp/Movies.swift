@@ -36,9 +36,9 @@ struct Genres: Codable {
 struct MovieAccurate: Codable {
     let adult: Bool?
     let backdrop_path: String?
-    let belongs_to_collection: [BelongsToCollection]?
+    let belongs_to_collection: BelongsToCollection?
     let budget: Int?
-    let genres: Genres?
+    let genres: [Genre]?
     let homepage: String?
     let id: Int?
     let imdb_id: String?
@@ -70,7 +70,7 @@ struct BelongsToCollection: Codable {
 
 struct SpokenLanguage: Codable {
     let english_name: String?
-    let iso_3166_1: String?
+    let iso_639_1: String?
     let name: String?
 }
 

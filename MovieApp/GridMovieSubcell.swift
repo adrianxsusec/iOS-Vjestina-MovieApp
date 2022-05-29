@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import SnapKit
 import MovieAppData
+import Kingfisher
 
 class GridMovieSubcell: UICollectionViewCell {
     
@@ -51,12 +52,8 @@ class GridMovieSubcell: UICollectionViewCell {
         
         let url = URL(string: "https://image.tmdb.org/t/p/original" + moviePassed.poster_path)!
 
-        DispatchQueue.main.async {
-            if let data = try? Data(contentsOf: url) {
-                self.picture.image = UIImage(data: data)
-            }
-
-        }
+        
+        self.picture.kf.setImage(with: url)
         
         
     }

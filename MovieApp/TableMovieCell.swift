@@ -5,6 +5,8 @@ import MovieAppData
 
 class TableMovieCell: UITableViewCell {
     
+    static let reuseIdentifier = "TableMovieCell"
+    
     var pic = UIImageView()
     var title = UILabel()
     var desc = UILabel()

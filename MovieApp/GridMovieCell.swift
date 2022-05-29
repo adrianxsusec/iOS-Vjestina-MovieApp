@@ -33,8 +33,7 @@ class GridMovieCell: UITableViewCell {
         movies.isScrollEnabled = true
         //movies.isPagingEnabled = true
         
-        movies.showsHorizontalScrollIndicator = false
-        movies.showsVerticalScrollIndicator = false
+        
         
         self.contentView.addSubview(filters)
         contentView.addSubview(group)
