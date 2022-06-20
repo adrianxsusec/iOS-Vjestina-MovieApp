@@ -40,8 +40,6 @@ class TabBarController: UITabBarController {
             
             moviesRepository.saveDownloadedMovies()
             
-            
-            
             movieListViewController = MovieListViewController()
             movieNavigationController = MovieNavigationController(rootViewController: movieListViewController)
             favoritesViewController = FavoritesViewController()

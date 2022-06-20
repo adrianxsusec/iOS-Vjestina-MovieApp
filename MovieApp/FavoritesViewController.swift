@@ -41,8 +41,6 @@ class FavoritesViewController: UIViewController {
         
         favorites.collectionViewLayout = favoritesLayout
         
-        
-        
     }
     
     func navBarAppearance() {

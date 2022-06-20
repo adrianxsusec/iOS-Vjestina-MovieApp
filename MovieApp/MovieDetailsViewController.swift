@@ -8,6 +8,27 @@ class MovieDetailsViewController: UIViewController {
     var movieForDisplay: Movie!
     var movieFetched: MovieAccurate!
     
+    
+    let overviewView = UIView()
+    let percentage = UILabel()
+    let userScore = UILabel()
+    let movieName = UILabel()
+    let movieReleaseDate = UILabel()
+    let movieDetails = UILabel()
+    
+    //lower part
+    let overviewTitle = UILabel()
+    let movieDescription = UILabel()
+    let character1 = UILabel()
+    let character2 = UILabel()
+    let director = UILabel()
+    let screenplay1 = UILabel()
+    let screenplay2 = UILabel()
+    let screenplay3 = UILabel()
+    
+    var titleConstraint: CGFloat!
+    var dateConstraint: CGFloat!
+    
     init(backgroundColor: UIColor) {
         self.backgroundColor = backgroundColor
         super.init(nibName: nil, bundle: nil)
@@ -39,6 +60,49 @@ class MovieDetailsViewController: UIViewController {
         let movieDatabaseDataSource = MovieDatabaseDataSource()
         
         print(movieDatabaseDataSource.fetchMovies())
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        titleConstraint = view.frame.width
+        dateConstraint = view.frame.width
+        
+        movieName.snp.remakeConstraints{
+            $0.leading.equalTo(percentage.snp.leading).offset(titleConstraint)
+            $0.top.equalTo(percentage.snp.bottom).offset(20)
+            $0.trailing.equalTo(view.safeAreaLayoutGuide.snp.trailing).offset(-20)
+        }
+        
+        movieReleaseDate.snp.remakeConstraints{
+            $0.leading.equalTo(percentage.snp.leading).offset(dateConstraint)
+            $0.top.equalTo(userScore.snp.bottom).offset(20)
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        titleConstraint = 0
+        dateConstraint = 0
+
+        UIView.animate(withDuration: 1, delay: 1, options: .curveLinear, animations: {
+            self.movieName.snp.remakeConstraints {
+                $0.leading.equalTo(self.percentage.snp.leading).offset(self.titleConstraint)
+                $0.top.equalTo(self.percentage.snp.bottom).offset(20)
+                $0.trailing.equalTo(self.view.safeAreaLayoutGuide.snp.trailing).offset(-20)
+            }
+        })
+        
+        UIView.animate(withDuration: 1, delay: 2, options: .curveLinear, animations: {
+            self.movieReleaseDate.snp.remakeConstraints {
+                $0.leading.equalTo(self.percentage.snp.leading).offset(self.dateConstraint)
+                $0.top.equalTo(self.userScore.snp.bottom).offset(80)
+            }
+        })
+        
+        self.view.layoutIfNeeded()
+        
     }
     
     func setMovieForDisplay(_ moviePassed: Movie) {
@@ -77,27 +141,13 @@ class MovieDetailsViewController: UIViewController {
     func buildViews() {
         
         //upper part
-        let movieImage = UIImage(named: "ironmanposter.png")
-        let movieImageView = UIImageView(image: movieImage)
-        let overviewView = UIView()
-        let percentage = UILabel()
-        let userScore = UILabel()
-        let movieName = UILabel()
-        let movieReleaseDate = UILabel()
-        let movieDetails = UILabel()
+        
         let star = UIImage(systemName: "star")
         let favourite = UIImageView(image: star)
         
+        let movieImage = UIImage(named: "ironmanposter.png")
+        let movieImageView = UIImageView(image: movieImage)
         
-        //lower part
-        let overviewTitle = UILabel()
-        let movieDescription = UILabel()
-        let character1 = UILabel()
-        let character2 = UILabel()
-        let director = UILabel()
-        let screenplay1 = UILabel()
-        let screenplay2 = UILabel()
-        let screenplay3 = UILabel()
         
 //        let scrollView = UIScrollView()
 //        scrollView.backgroundColor = .clear
@@ -416,12 +466,12 @@ class MovieDetailsViewController: UIViewController {
         
         movieReleaseDate.snp.makeConstraints {
             $0.leading.equalTo(percentage.snp.leading)
-            $0.top.equalTo(movieName.snp.bottom).offset(movieImageView.frame.height * 0.005)
+            $0.top.equalTo(userScore.snp.bottom).offset(movieImageView.frame.height * 0.06)
         }
         
         movieDetails.snp.makeConstraints {
             $0.leading.equalTo(percentage.snp.leading)
-            $0.top.equalTo(movieReleaseDate.snp.bottom).offset(movieImageView.frame.height * 0.0005)
+            $0.top.equalTo(userScore.snp.bottom).offset(movieImageView.frame.height * 0.005)
         }
         
         favourite.snp.makeConstraints {
